@@ -1,0 +1,82 @@
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: standard
+          uri: http://localhost:8081
+          predicates:
+            - Path=/standards/**, 
+        - id: production
+          uri: http://localhost:8082
+          predicates:
+            - Path=/productions/**, /prodStandards/**, 
+        - id: packing
+          uri: http://localhost:8083
+          predicates:
+            - Path=/packings/**, 
+        - id: dashboard
+          uri: http://localhost:8084
+          predicates:
+            - Path=, /dashboards/**
+        - id: frontend
+          uri: http://localhost:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: standard
+          uri: http://standard:8080
+          predicates:
+            - Path=/standards/**, 
+        - id: production
+          uri: http://production:8080
+          predicates:
+            - Path=/productions/**, /prodStandards/**, 
+        - id: packing
+          uri: http://packing:8080
+          predicates:
+            - Path=/packings/**, 
+        - id: dashboard
+          uri: http://dashboard:8080
+          predicates:
+            - Path=, /dashboards/**
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
